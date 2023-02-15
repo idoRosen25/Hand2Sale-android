@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "221049473133",
+    "firebase_url": "https://hand2sale-ee245-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hand2sale-ee245",
+    "storage_bucket": "hand2sale-ee245.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221049473133:android:96f5c97d869822a9171764",
+        "android_client_info": {
+          "package_name": "com.example.hand2sale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221049473133-u006kpmbdjfeae6tnq4sj9rvskji9rbm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMelePmS-xFjLwCjWwd3lx6RBQKQUybd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221049473133-u006kpmbdjfeae6tnq4sj9rvskji9rbm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

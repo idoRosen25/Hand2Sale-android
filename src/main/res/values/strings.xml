@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Hand2Sale</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_full_name">Enter Full Name</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="action_login">Login</string>
+    <string name="continue_to_login">Continue To Login</string>
+    <string name="continue_to_signup">Continue To Signup</string>
+</resources>
