@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/postsListFragment"
+        android:id="@+id/postListFragment"
         android:icon="@android:drawable/btn_star"
         android:title="List" />
     <item

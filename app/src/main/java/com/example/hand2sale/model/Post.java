@@ -8,8 +8,9 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.hand2sale.MyApplication;
+import com.google.firebase.firestore.FieldValue;
 
-import java.sql.Timestamp;
+import com.google.firebase.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class Post {
     }
 
 
-    public Post(String id, String authorID, String title, String desc, String image, Double price) {
+    public Post(@NonNull String id, String authorID, String title, String desc, String image, Double price) {
         this.id = id;
         this.authorID = authorID;
         this.title = title;
@@ -60,7 +61,7 @@ public class Post {
         Post post = new Post(id,authorID,title,description,image,price);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
-            post.setLastUpdated(time.getTime());
+            post.setLastUpdated(time.getSeconds());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -76,7 +77,7 @@ public class Post {
         SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong(LOCAL_LAST_UPDATED,time);
-        editor.commit();
+        editor.apply();
     }
 
     public Map<String, Object> toJson() {
@@ -88,6 +89,7 @@ public class Post {
         result.put(DESCRIPTION, desc);
         result.put(IMAGE_URL, image);
         result.put(PRICE, price);
+        result.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return result;
     }
 
@@ -96,7 +98,7 @@ public class Post {
         return id;
     }
 
-    public void setid(@NonNull String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 

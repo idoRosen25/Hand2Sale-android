@@ -17,9 +17,9 @@ import android.util.Log;
 public class Model {
     private static final Model _instance = new Model();
 
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
-    private DBModel dbModel = DBModel.instance();
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler= HandlerCompat.createAsync(Looper.getMainLooper());
+    private final DBModel dbModel = DBModel.instance();
     AppLocalDbRepository localDb = AppLocalDb.getAppDb();
     public static Model instance(){return _instance;}
     private Model(){}
@@ -53,7 +53,7 @@ public class Model {
                 Long time = localLastUpdate;
                 for(Post post:list){
                     localDb.postDao().insertAll(post);
-                    if(time<post.getLastUpdated()){
+                    if(post!=null && time<post.getLastUpdated()){
                         time=post.getLastUpdated();
                     }
                 }

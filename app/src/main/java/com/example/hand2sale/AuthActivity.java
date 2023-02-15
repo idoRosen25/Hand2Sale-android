@@ -28,7 +28,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
         FirebaseApp.initializeApp(this);
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.auth_nav_host);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.auth_nav_host_fragment);
         navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this,navController);
     }

@@ -87,7 +87,8 @@ public class SignupFragment extends Fragment {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-
+                                            Toast.makeText(MyApplication.getMyContext(), "Signup Failed. Check Fields and try again", Toast.LENGTH_SHORT).show();
+                                            onEnd();
                                         }
                                     });
 

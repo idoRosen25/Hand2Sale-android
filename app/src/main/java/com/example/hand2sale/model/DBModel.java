@@ -2,9 +2,13 @@ package com.example.hand2sale.model;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.hand2sale.MyApplication;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +61,16 @@ public class DBModel {
                         }
                         callback.onComplete(list);
                     }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MyApplication.getMyContext(), "Error Fetching Posts. Try again later", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Toast.makeText(MyApplication.getMyContext(), "Post Fetching Canceled", Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
@@ -66,6 +80,12 @@ public class DBModel {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        listener.onComplete(null);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MyApplication.getMyContext(), "Couldn't Save Post. Try again later", Toast.LENGTH_SHORT).show();
                         listener.onComplete(null);
                     }
                 });
@@ -82,6 +102,7 @@ public class DBModel {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MyApplication.getMyContext(), "Couldn't Save Post Image. Try again later", Toast.LENGTH_SHORT).show();
                 listener.onComplete(null);
             }
         })
