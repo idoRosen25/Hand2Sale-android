@@ -39,9 +39,16 @@ public class Model {
         if(postsList==null){
             postsList=localDb.postDao().getAll();
             refreshAllPosts();
+
         }
         return postsList;
     }
+
+
+    public Post getPostById(String postId){
+        return localDb.postDao().getPostById(postId);
+    }
+
 
     public void refreshAllPosts(){
         EventPostListLoadingState.setValue(LoadingState.LOADING);
@@ -64,6 +71,7 @@ public class Model {
                     e.printStackTrace();
                 }
 
+
                 Post.setLocalLastUpdate(time);
                 EventPostListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
@@ -73,6 +81,12 @@ public class Model {
     public void addPost(Post post,Listener<Void> listener){
         dbModel.addPost(post,(Void)->{
             refreshAllPosts();
+            listener.onComplete(null);
+        });
+    }
+
+    public void updateUser(User user,Listener<Void> listener){
+        dbModel.updateUser(user,(Void)->{
             listener.onComplete(null);
         });
     }

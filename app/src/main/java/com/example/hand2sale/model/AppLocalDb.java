@@ -7,9 +7,10 @@ import androidx.room.RoomDatabase;
 
 import com.example.hand2sale.MyApplication;
 
-@Database(entities={Post.class},version=1)
+@Database(entities={Post.class,User.class},version=5)
 abstract class AppLocalDbRepository extends RoomDatabase{
     public abstract PostDao postDao();
+    public abstract UserDao userDao();
 }
 public class AppLocalDb {
     static public AppLocalDbRepository getAppDb(){
@@ -18,6 +19,7 @@ public class AppLocalDb {
                 AppLocalDbRepository.class,
                 "Hand2Sale.db"
         )
+                .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
     }

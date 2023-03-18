@@ -8,8 +8,14 @@
         android:title="Add"
         app:showAsAction="always" />
     <item
-        android:id="@+id/aboutFragment"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="about"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/userProfileFragment"
+        android:icon="@drawable/ic_profile_header"
+        app:showAsAction="always"
+        android:title="Profile"
+        />
+    <item
+        android:id="@+id/userLogout"
+        android:icon="@drawable/ic_logout_header"
+        app:showAsAction="ifRoom"
+        android:title="Logout" />
 </menu>

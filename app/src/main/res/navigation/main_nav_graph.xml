@@ -11,7 +11,7 @@
         android:label="Posts List"
         tools:layout="@layout/fragment_posts_list"
         >
-
+<action android:id="@+id/action_postList_to_display" app:destination="@id/displayPost" />
     </fragment>
 
     <fragment
@@ -20,6 +20,28 @@
         android:label="Add New Post"
         tools:layout="@layout/fragment_add_post"
         />
+
+
     <action android:id="@+id/action_global_add_post_fragment" app:destination="@id/addPostFragment" />
+    <action android:id="@+id/action_global_user_profile_fragment" app:destination="@id/userProfileFragment"/>
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.hand2sale.UserProfileFragment"
+        android:label="My Profile"
+        tools:layout="@layout/fragment_user_profile"
+        >
+    <action android:id="@+id/action_display_to_edit" app:destination="@id/editPost" />
+
+    </fragment>
+
+    <fragment android:id="@+id/displayPost" android:name="com.example.hand2sale.DisplayPostFragment" android:label="Post Details">
+
+        <argument android:name="postId" app:argType="string"/>
+    </fragment>
+
+    <fragment android:id="@+id/editPost" android:name="com.example.hand2sale.EditPostFragment" android:label="Edit Post">
+        <argument android:name="editPostId" app:argType="string"/>
+    </fragment>
 
 </navigation>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.example.hand2sale.MainActivity;
 import com.example.hand2sale.R;
 import com.example.hand2sale.databinding.FragmentSignupBinding;
+import com.example.hand2sale.model.Model;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +49,7 @@ public class SignupFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=getContext();
+        context=getActivity().getApplicationContext();
     }
 
     @Override
@@ -72,26 +74,18 @@ public class SignupFragment extends Fragment {
 
                 pgsBar.setVisibility(View.VISIBLE);
                 if (emailEt.getText().toString().length() != 0 && passwordEt.getText().toString().length() != 0 && fullNameEt.getText().toString().length() != 0 && usernameEt.getText().toString().length() != 0 && phoneEt.getText().toString().length() != 0) {
-                    AuthModel.signupWithEmail(emailEt.getText().toString(), passwordEt.getText().toString(), new AuthModel.OnAuthDataListener() {
+                    AuthModel.signupWithEmail(
+                            emailEt.getText().toString(),
+                            passwordEt.getText().toString(),
+                            usernameEt.getText().toString(),
+                            fullNameEt.getText().toString(),
+                            phoneEt.getText().toString(),
+                            new AuthModel.OnAuthDataListener() {
                         @Override
-                        public void onSuccess() {
-                            FirebaseUser user = getCurrentUser();
-                            DBModel.instance().getDB().collection("users")
-                                    .add(new User(usernameEt.getText().toString(), fullNameEt.getText().toString(), phoneEt.getText().toString(), null))
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Log.d("signupSuccess", "user data added successfully");
-                                            context.startActivity(new Intent(context, MainActivity.class));
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(MyApplication.getMyContext(), "Signup Failed. Check Fields and try again", Toast.LENGTH_SHORT).show();
-                                            onEnd();
-                                        }
-                                    });
-
+                        public void onSuccess(@Nullable User user) {
+                            Log.d("signupSuccess", "user data added successfully");
+                            Log.d("user from signup",user.toString());
+                            context.startActivity(new Intent(context,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                         }
 
                         @Override

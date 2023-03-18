@@ -11,41 +11,43 @@ import com.example.hand2sale.MyApplication;
 import com.google.firebase.firestore.FieldValue;
 
 import com.google.firebase.Timestamp;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Entity
+@Entity(tableName = "Post")
 public class Post {
 
     @PrimaryKey
     @NonNull
     private String id;
-    private String authorID;
+    private String authorEmail;
     private String title;
     private String desc;
     private String image;
     private Double price;
+    private Long uploadTimestamp;
     private Long lastUpdated;
 
-    public Post() {
-    }
 
-
-    public Post(@NonNull String id, String authorID, String title, String desc, String image, Double price) {
+    public Post(@NonNull String id, String authorEmail, String title, String desc, String image, Double price,Long uploadTimestamp) {
         this.id = id;
-        this.authorID = authorID;
+        this.authorEmail = authorEmail;
         this.title = title;
         this.desc = desc;
         this.image = image;
         this.price = price;
+        this.uploadTimestamp=uploadTimestamp;
     }
 
     static final String TITLE="title";
     static final String ID="id";
-    static final String AUTHOR_ID="authorID";
+    static final String AUTHOR_EMAIL="authorEmail";
     static final String DESCRIPTION="description";
     static final String IMAGE_URL="imageUrl";
     static final String PRICE="price";
+    static final String UPLOAD_TIMESTAMP="uploadTimestamp";
     static final String COLLECTION ="posts";
     static final String LAST_UPDATED="lastUpdated";
     static final String LOCAL_LAST_UPDATED="post_local_last_update";
@@ -56,9 +58,10 @@ public class Post {
         String title =(String)json.get(TITLE);
         String description = (String) json.get(DESCRIPTION);
         String image = (String) json.get(IMAGE_URL);
-        String authorID = (String) json.get(AUTHOR_ID);
+        String authorEmail = (String) json.get(AUTHOR_EMAIL);
         Double price = (Double) json.get(PRICE);
-        Post post = new Post(id,authorID,title,description,image,price);
+        Long uploadTimestamp=(Long) json.get(UPLOAD_TIMESTAMP);
+        Post post = new Post(id,authorEmail,title,description,image,price,uploadTimestamp);
         try{
             Timestamp time = (Timestamp) json.get(LAST_UPDATED);
             post.setLastUpdated(time.getSeconds());
@@ -84,11 +87,12 @@ public class Post {
         HashMap<String, Object> result = new HashMap<>();
 
         result.put(ID, id);
-        result.put(AUTHOR_ID, authorID);
+        result.put(AUTHOR_EMAIL, authorEmail);
         result.put(TITLE, title);
         result.put(DESCRIPTION, desc);
         result.put(IMAGE_URL, image);
         result.put(PRICE, price);
+        result.put(UPLOAD_TIMESTAMP,new Date().getTime());
         result.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return result;
     }
@@ -102,12 +106,12 @@ public class Post {
         this.id = id;
     }
 
-    public String getAuthorID() {
-        return authorID;
+    public String getAuthorEmail() {
+        return authorEmail;
     }
 
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
+    public void setAuthorEmail(String authorEmail) {
+        this.authorEmail = authorEmail;
     }
 
     public String getTitle() {
@@ -145,5 +149,13 @@ public class Post {
     public Long getLastUpdated(){return this.lastUpdated;}
 
     public void setLastUpdated(Long lastUpdated){this.lastUpdated=lastUpdated;}
+
+    public Long getUploadTimestamp(){
+        return this.uploadTimestamp;
+    }
+
+    public void setUploadTimestamp(Long uploadTimestamp){
+        this.uploadTimestamp=uploadTimestamp;
+    }
 
 }

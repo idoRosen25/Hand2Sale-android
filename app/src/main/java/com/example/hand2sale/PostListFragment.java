@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.hand2sale.databinding.FragmentPostsListBinding;
 import com.example.hand2sale.model.Model;
+import com.example.hand2sale.model.Post;
 
 import java.util.List;
 
@@ -40,12 +41,19 @@ public class PostListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG","Row was clicked in pos: "+pos);
+
+                Navigation.findNavController(view).navigate(PostListFragmentDirections.actionPostListToDisplay(viewModel.getData().getValue().get(pos).getId()));
+
             }
         });
 
 
         viewModel.getData().observe(getViewLifecycleOwner(),list->{
             adapter.setData(list);
+            for(Post p: list){
+                Log.d("post form view",""+p.getAuthorEmail());
+            }
+            adapter.notifyDataSetChanged();
         });
 
         Model.instance().EventPostListLoadingState.observe(getViewLifecycleOwner(),status->{
@@ -54,6 +62,8 @@ public class PostListFragment extends Fragment {
 
         binding.swipeRefresh.setOnRefreshListener(()->{
             reloadData();
+            adapter.notifyDataSetChanged();
+
         });
 
         return view;
@@ -66,7 +76,6 @@ public class PostListFragment extends Fragment {
     }
 
     void reloadData(){
-
         Model.instance().refreshAllPosts();
     }
 }

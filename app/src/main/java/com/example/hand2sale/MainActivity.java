@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.hand2sale.model.AuthModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,10 +46,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==android.R.id.home){
             navController.popBackStack();
+        }else if(item.getItemId()==R.id.userLogout){
+            AuthModel.logout();
+            finish();
         }else{
             fragmentMenuId=item.getItemId();
             return NavigationUI.onNavDestinationSelected(item,navController);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (AuthModel.getCurrentUser() != null) {
+            finishAffinity();
+        } else {
+            finish();
+        }
     }
 }

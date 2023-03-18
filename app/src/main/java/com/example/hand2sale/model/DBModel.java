@@ -74,6 +74,40 @@ public class DBModel {
                 });
     }
 
+    public void getAllUsersSince(Long since,Model.Listener<List<User>> callback){
+        db.collection(User.COLLECTION)
+                .whereGreaterThanOrEqualTo(User.LAST_UPDATED,new Timestamp(since,0))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<User> list = new LinkedList<>();
+                        if(task.isSuccessful()){
+                            QuerySnapshot jsonList = task.getResult();
+                            for(DocumentSnapshot json : jsonList){
+                                User user = User.fromJson(json.getData());
+                                list.add(user);
+                            }
+                        }
+                        callback.onComplete(list);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MyApplication.getMyContext(), "Error Fetching Users. Try again later", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Toast.makeText(MyApplication.getMyContext(), "Post Fetching Canceled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+    }
+
     public void addPost(Post post, Model.Listener<Void> listener){
         db.collection(Post.COLLECTION)
                 .document(post.getId()).set(post.toJson())
@@ -91,6 +125,20 @@ public class DBModel {
                 });
     }
 
+    public void updateUser(User user, Model.Listener<Void> listener){
+        db.collection(User.COLLECTION).document(user.getId()).set(user.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                listener.onComplete(null);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MyApplication.getMyContext(), "Couldn't update user. Try again later", Toast.LENGTH_SHORT).show();
+                listener.onComplete(null);
+            }
+        });
+    }
     void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener){
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("images/"+name+".jpg");
@@ -118,4 +166,5 @@ public class DBModel {
                     }
                 });
     }
+
 }

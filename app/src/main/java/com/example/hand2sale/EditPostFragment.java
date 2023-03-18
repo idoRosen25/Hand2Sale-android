@@ -4,16 +4,18 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,29 +23,43 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.hand2sale.databinding.FragmentAddPostBinding;
+import com.example.hand2sale.databinding.FragmentEditPostBinding;
 import com.example.hand2sale.model.AuthModel;
 import com.example.hand2sale.model.Model;
 import com.example.hand2sale.model.Post;
 
+import java.util.List;
 import java.util.UUID;
 
-public class AddPostFragment extends Fragment {
-    FragmentAddPostBinding binding;
+public class EditPostFragment extends Fragment {
+
+    FragmentEditPostBinding binding;
+    PostListFragmentViewModel viewModel;
+    String postId;
+    Post post=null;
+
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
-
     Boolean isPostImageSelected=false;
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            this.postId = bundle.getString("editPostId");
+        }
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menu.removeItem(R.id.addPostFragment);
+                menu.removeItem(R.id.userLogout);
             }
 
             @Override
@@ -52,6 +68,7 @@ public class AddPostFragment extends Fragment {
             }
         },this, Lifecycle.State.RESUMED);
 
+        viewModel = new ViewModelProvider(this).get(PostListFragmentViewModel.class);
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
             public void onActivityResult(Bitmap result) {
@@ -77,40 +94,61 @@ public class AddPostFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        binding = FragmentAddPostBinding.inflate(inflater,container,false);
+        binding = FragmentEditPostBinding.inflate(inflater,container,false);
+
         View view = binding.getRoot();
 
-        binding.saveBtn.setOnClickListener(view1->{
-            String title = binding.titleEt.getText().toString();
-            String description = binding.descriptionEt.getText().toString();
-            Double price = Double.parseDouble(binding.priceEt.getText().toString());
+        List<Post> list = viewModel.getData().getValue();
 
-            Post post = new Post(UUID.randomUUID().toString(), AuthModel.getCurrentUser().getEmail(),title,description,"",price,null);
-
-            if(isPostImageSelected){
-                binding.postImg.setDrawingCacheEnabled(true);
-                binding.postImg.buildDrawingCache();
-                Bitmap bitmap = ((BitmapDrawable) binding.postImg.getDrawable()).getBitmap();
-                Model.instance().uploadImage(post.getId(),bitmap,url->{
-                    if(url!=null){
-                        post.setImage(url);
-                    }
-                    Model.instance().addPost(post,(unused)->{
-                        Navigation.findNavController(view1).popBackStack();
-                    });
-                });
+        for(Post p :list){
+            if(p.getId()==postId){
+                this.post=p;
             }
-        });
+        }
 
-        binding.cancellBtn.setOnClickListener(view1->Navigation.findNavController(view1).popBackStack());
 
-        binding.cameraButton.setOnClickListener(view1->{
-            cameraLauncher.launch(null);
-        });
+      if(post!=null){
+          binding.titleEt.setText(post.getTitle());
+          binding.descriptionEt.setText(post.getDesc());
+          binding.priceEt.setText(post.getPrice().toString());
 
-        binding.galleryButton.setOnClickListener(view1->{
-            galleryLauncher.launch("image/*");
-        });
+          binding.saveBtn.setOnClickListener(view1->{
+              post.setTitle(binding.titleEt.getText().toString());
+              post.setDesc(binding.descriptionEt.getText().toString());
+              post.setPrice(Double.parseDouble(binding.priceEt.getText().toString()));
+
+
+
+              if(isPostImageSelected) {
+                  binding.postImg.setDrawingCacheEnabled(true);
+                  binding.postImg.buildDrawingCache();
+                  Bitmap bitmap = ((BitmapDrawable) binding.postImg.getDrawable()).getBitmap();
+                  Model.instance().uploadImage(post.getId(), bitmap, url -> {
+                      if (url != null) {
+                          post.setImage(url);
+                      }
+                      Model.instance().addPost(post, (unused) -> {
+                          Navigation.findNavController(view1).popBackStack(R.id.postListFragment,false);
+                      });
+                  });
+              }else{
+                  Toast.makeText(getContext(), "Please Choose An Image and try gain", Toast.LENGTH_LONG).show();
+              }
+          });
+
+
+          binding.cancellBtn.setOnClickListener(view1->Navigation.findNavController(view1).popBackStack());
+
+          binding.cameraButton.setOnClickListener(view1->{
+              cameraLauncher.launch(null);
+          });
+
+          binding.galleryButton.setOnClickListener(view1->{
+              galleryLauncher.launch("image/*");
+          });
+      }
+
+
         return view;
     }
 }

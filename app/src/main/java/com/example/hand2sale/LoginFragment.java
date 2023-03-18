@@ -12,12 +12,16 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.hand2sale.databinding.FragmentLoginBinding;
 import com.example.hand2sale.model.AuthModel;
+import com.example.hand2sale.model.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginFragment extends Fragment {
@@ -33,7 +37,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=  this.getContext();
+        context=  getActivity().getApplicationContext();
     }
 
     @Override
@@ -72,9 +76,8 @@ public class LoginFragment extends Fragment {
                     pgsBar.setVisibility(View.VISIBLE);
                     AuthModel.loginWithEmail(emailEt.getText().toString(), passwordEt.getText().toString(), new AuthModel.OnAuthDataListener() {
                         @Override
-                        public void onSuccess() {
-                            context.startActivity(new Intent(context, MainActivity.class));
-                        }
+                        public void onSuccess(@Nullable User user) {
+                            context.startActivity(new Intent(context,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));                        }
 
                         @Override
                         public void onStart() {
