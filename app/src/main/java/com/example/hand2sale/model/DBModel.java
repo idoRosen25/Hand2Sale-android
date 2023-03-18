@@ -114,6 +114,7 @@ public class DBModel {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(MyApplication.getMyContext(), "Post saved successfully", Toast.LENGTH_SHORT).show();
                         listener.onComplete(null);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -125,10 +126,30 @@ public class DBModel {
                 });
     }
 
+    public void deletePostById(Post post,Model.Listener<Void> listener){
+        db.collection(Post.COLLECTION)
+                .document(post.getId())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(MyApplication.getMyContext(), "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                        listener.onComplete(null);
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MyApplication.getMyContext(), "Failed to delete post "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     public void updateUser(User user, Model.Listener<Void> listener){
         db.collection(User.COLLECTION).document(user.getId()).set(user.toMap()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(MyApplication.getMyContext(), "User data saved successfully", Toast.LENGTH_SHORT).show();
                 listener.onComplete(null);
             }
         }).addOnFailureListener(new OnFailureListener() {

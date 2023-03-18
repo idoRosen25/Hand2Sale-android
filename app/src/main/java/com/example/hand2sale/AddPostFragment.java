@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -99,6 +100,8 @@ public class AddPostFragment extends Fragment {
                         Navigation.findNavController(view1).popBackStack();
                     });
                 });
+            }else{
+                Toast.makeText(getContext(), "Please Choose An Image and try gain", Toast.LENGTH_LONG).show();
             }
         });
 

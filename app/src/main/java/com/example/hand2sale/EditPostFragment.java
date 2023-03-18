@@ -132,13 +132,19 @@ public class EditPostFragment extends Fragment {
                       });
                   });
               }else{
-                  Toast.makeText(getContext(), "Please Choose An Image and try gain", Toast.LENGTH_LONG).show();
+                  Model.instance().addPost(post, (unused) -> {
+                      Navigation.findNavController(view1).popBackStack(R.id.postListFragment,false);
+                  });
               }
           });
 
 
-          binding.cancellBtn.setOnClickListener(view1->Navigation.findNavController(view1).popBackStack());
+          binding.cancelBtn.setOnClickListener(view1->Navigation.findNavController(view1).popBackStack());
 
+          binding.deleteBtn.setOnClickListener(view1->{
+              Model.instance().deletePost(post);
+              Navigation.findNavController(view1).popBackStack(R.id.postListFragment,false);
+          });
           binding.cameraButton.setOnClickListener(view1->{
               cameraLauncher.launch(null);
           });

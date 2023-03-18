@@ -13,6 +13,8 @@ import java.util.concurrent.Executors;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.firebase.firestore.FieldValue;
+
 
 public class Model {
     private static final Model _instance = new Model();
@@ -49,6 +51,15 @@ public class Model {
         return localDb.postDao().getPostById(postId);
     }
 
+    public void deletePost(Post post){
+        EventPostListLoadingState.postValue(LoadingState.LOADING);
+        dbModel.deletePostById(post,Void->{
+
+               localDb.postDao().delete(post);
+            EventPostListLoadingState.postValue(LoadingState.NOT_LOADING);
+
+        });
+    }
 
     public void refreshAllPosts(){
         EventPostListLoadingState.setValue(LoadingState.LOADING);
