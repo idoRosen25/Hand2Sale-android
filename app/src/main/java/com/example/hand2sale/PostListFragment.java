@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,7 +18,6 @@ import com.example.hand2sale.databinding.FragmentPostsListBinding;
 import com.example.hand2sale.model.Model;
 import com.example.hand2sale.model.Post;
 
-import java.util.List;
 
 public class PostListFragment extends Fragment {
     FragmentPostsListBinding binding;
@@ -46,7 +44,6 @@ public class PostListFragment extends Fragment {
 
             }
         });
-
 
         viewModel.getData().observe(getViewLifecycleOwner(),list->{
             adapter.setData(list);
